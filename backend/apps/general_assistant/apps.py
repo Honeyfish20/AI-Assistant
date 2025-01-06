@@ -1,0 +1,8 @@
+from django.apps import AppConfig
+
+
+class GeneralAssistantConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'general_assistant'
+    
+    verbose_name = "General Assistant Setting"

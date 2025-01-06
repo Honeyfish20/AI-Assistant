@@ -1,0 +1,12 @@
+streamlit 
+tqdm
+boto3 
+django 
+django-simpleui 
+djangorestframework 
+djangorestframework-simplejwt 
+drf-yasg
+pymysql
+pycryptodomex
+aiohttp
+uvicorn

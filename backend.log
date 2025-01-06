@@ -1,0 +1,80 @@
+INFO:     Started server process [25185]
+INFO:     Waiting for application startup.
+INFO:     ASGI 'lifespan' protocol appears unsupported.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8501 (Press CTRL+C to quit)
+INFO:     223.167.127.24:7000 - "GET /admin/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50406 - "POST /api/token/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50408 - "GET /api/role_chatbot/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50420 - "GET /api/quality_check_chatbots/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5225 - "GET /static/admin/simpleui-x/fontawesome-free-6.2.0-web/webfonts/fa-brands-400.woff2 HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5225 - "GET /admin/general_assistant/userprompt/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5225 - "GET /static/admin/css/base.css?_=2.7 HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5275 - "GET /static/admin/simpleui-x/css/base.css?_=2.7 HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5273 - "GET /static/admin/simpleui-x/theme/simpleui.css HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5274 - "GET /static/admin/css/changelists.css?_=20180905 HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5276 - "GET /static/admin/css/responsive.css?_=20180905 HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5278 - "GET /admin/jsi18n/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5225 - "GET /admin/assistant_settings/basemodel/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5276 - "GET /admin/jsi18n/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5225 - "GET /admin/assistant_settings/basemodel/2/change/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5225 - "GET /static/admin/css/forms.css HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5276 - "GET /admin/jsi18n/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5225 - "GET /static/admin/css/widgets.css HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5639 - "GET /static/admin/simpleui-x/fontawesome-free-6.2.0-web/webfonts/fa-regular-400.woff2 HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5640 - "GET /admin/role_chatbot/skill/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5641 - "GET /admin/jsi18n/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5640 - "GET /admin/role_chatbot/skill/6/change/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5644 - "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5641 - "GET /static/admin/js/SelectBox.js HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5639 - "GET /admin/jsi18n/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5640 - "GET /static/admin/js/change_form.js HTTP/1.1" 200 OK
+INFO:     220.243.131.173:64076 - "POST /api/chat_feishu HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5140 - "GET /admin/assistant_settings/basemodel/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5141 - "GET /admin/jsi18n/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5140 - "GET /admin/assistant_settings/basemodel/1/change/ HTTP/1.1" 200 OK
+INFO:     223.167.127.24:5140 - "GET /admin/jsi18n/ HTTP/1.1" 200 OK
+INFO:     220.243.131.172:35746 - "POST /api/chat_feishu HTTP/1.1" 200 OK
+INFO:     123.58.10.239:56744 - "POST /api/chat_feishu HTTP/1.1" 200 OK
+INFO:     35.203.211.124:62974 - "GET / HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     44.211.11.245:11241 - "POST /sdk HTTP/1.1" 404 Not Found
+INFO:     44.211.11.245:46653 - "GET / HTTP/1.0" 404 Not Found
+INFO:     44.211.11.245:62371 - "GET /nmaplowercheck1719504230 HTTP/1.1" 404 Not Found
+INFO:     44.211.11.245:17886 - "GET /evox/about HTTP/1.1" 404 Not Found
+INFO:     44.211.11.245:1156 - "GET /HNAP1 HTTP/1.1" 404 Not Found
+INFO:     44.211.11.245:55776 - "GET / HTTP/1.0" 404 Not Found
+INFO:     44.211.11.245:3356 - "GET / HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:60058 - "GET / HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:21611 - "GET /api HTTP/1.1" 301 Moved Permanently
+INFO:     54.242.170.70:35927 - "GET /webhdfs/v1/?op=LISTSTATUS HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:21843 - "GET /api/json HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:21201 - "GET /config HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:12824 - "GET /explorer/index.html HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:59324 - "GET /com.amazon.coral.metadata/model.json HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:9450 - "GET /login HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:13734 - "GET /_all_dbs HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:22244 - "GET /ws/v1/cluster HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:21611 - "GET /api/ HTTP/1.1" 403 Forbidden
+INFO:     54.242.170.70:13687 - "GET /version HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:13760 - "GET /info HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:65461 - "GET /conf HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:24063 - "GET /grid/console HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:24453 - "GET /status HTTP/1.1" 404 Not Found
+INFO:     54.242.170.70:61883 - "GET /api/v1/trace HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     162.142.125.196:35632 - "GET / HTTP/1.1" 404 Not Found
+INFO:     162.142.125.196:38040 - "GET / HTTP/1.1" 404 Not Found
+INFO:     162.142.125.196:38046 - "PRI %2A HTTP/2.0" 404 Not Found
+WARNING:  Invalid HTTP request received.
+INFO:     127.0.0.1:48560 - "POST /api/token/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48562 - "GET /api/role_chatbot/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48568 - "GET /api/quality_check_chatbots/ HTTP/1.1" 200 OK
+INFO:     123.58.10.238:21660 - "POST /api/chat_feishu HTTP/1.1" 200 OK
+INFO:     147.185.132.220:62138 - "GET / HTTP/1.1" 404 Not Found
+INFO:     162.216.150.102:64454 - "GET / HTTP/1.1" 404 Not Found
+INFO:     123.58.10.239:51432 - "POST /api/chat_feishu HTTP/1.1" 200 OK
+INFO:     123.58.10.238:21444 - "POST /api/chat_feishu HTTP/1.1" 200 OK
+INFO:     123.58.10.238:41578 - "POST /api/chat_feishu HTTP/1.1" 200 OK
