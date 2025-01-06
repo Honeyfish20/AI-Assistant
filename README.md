@@ -201,6 +201,7 @@ sh ./stop.sh
 ```
 
 ## Contributor
+- Nancy Wu(Nancynwu@amazon.com)
 - Hao Huang (tonyhh@amazon.com)
 - Xuefei Zhang (xuefegzh@amazon.com)
 - Guang Yang (yaguan@amazon.com)
