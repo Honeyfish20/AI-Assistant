@@ -194,3 +194,6 @@ SIMPLE_JWT = {
 
 ASGI_APPLICATION = 'backend.asgi.application'
 
+# Import SageMaker configuration
+from frontend.configs.sagemaker_config import SAGEMAKER_CONFIG
+

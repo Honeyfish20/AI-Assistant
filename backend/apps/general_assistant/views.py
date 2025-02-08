@@ -1,9 +1,13 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView, View
+from rest_framework.decorators import action
+from rest_framework.response import Response
 import json
 from asgiref.sync import sync_to_async
 from asyncio import ensure_future
 import asyncio
+import boto3
+from frontend.configs.sagemaker_config import SAGEMAKER_CONFIG
 
 from .models import UserPrompt
 from .serializers import UserPromptSerializer
@@ -72,6 +76,50 @@ class ChatFeishuView(View):
                     user_id=user_id,
                 ))
         return JsonResponse({'message': 'ok'})
+
+class GeneralAssistantViewSet(viewsets.ModelViewSet):
+    @action(detail=False, methods=['post'])
+    def chat_with_audio(self, request):
+        """处理带音频输出的对话请求"""
+        try:
+            # 1. 处理LLM响应
+            llm_response = self.process_llm_request(request.data)
+            
+            # 2. 生成语音
+            audio_response = self.generate_audio(llm_response)
+            
+            return Response({
+                'text': llm_response,
+                'audio': audio_response
+            })
+            
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+    
+    def generate_audio(self, text):
+        """调用SageMaker端点生成音频"""
+        runtime_client = boto3.client(
+            'sagemaker-runtime',
+            region_name=SAGEMAKER_CONFIG['ENDPOINT']['REGION']
+        )
+        
+        request = {
+            "refer_wav_path": SAGEMAKER_CONFIG['AUDIO']['REFERENCE_WAV'],
+            "prompt_text": text[:50],
+            "prompt_language": SAGEMAKER_CONFIG['TEXT']['DEFAULT_LANGUAGE'],
+            "text": text,
+            "text_language": SAGEMAKER_CONFIG['TEXT']['DEFAULT_LANGUAGE'],
+            "output_s3uri": "",
+            "cut_punc": SAGEMAKER_CONFIG['TEXT']['CUT_PUNCTUATION']
+        }
+        
+        response = runtime_client.invoke_endpoint_with_response_stream(
+            EndpointName=SAGEMAKER_CONFIG['ENDPOINT']['NAME'],
+            ContentType='application/json',
+            Body=json.dumps(request)
+        )
+        
+        return self.process_audio_response(response)
 
 
 

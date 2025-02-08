@@ -1,6 +1,8 @@
 import streamlit as st
 import os
 import logging
+import threading
+import queue
 from configs.system_cfg import cfg_LLM_kwargs, cfg_modes
 from funcs.role_chatbot import RoleChatbot
 from funcs.QC_chatbot import QCChatbot
@@ -12,12 +14,14 @@ from copy import deepcopy
 import re
 import json
 from datetime import datetime
-import threading
 from tqdm import tqdm
 import boto3
 import json
 import pickle
 import requests
+import base64
+from io import BytesIO
+from configs.sagemaker_config import SAGEMAKER_CONFIG
 
 from util_func import get_token, get_role_chatbots, get_quality_check_chatbots, \
     get_core_prompts_by_id, get_skill_by_id, get_checker_by_id, streaming_invoke, \
@@ -127,6 +131,108 @@ if mode_choicer == "Readme":
     if readme_language_choicer == "Chinese":
         get_zh_readme()
 
+def play_audio(audio_bytes):
+    """播放音频的辅助函数"""
+    try:
+        # 使用WAV格式播放音频
+        audio_b64 = base64.b64encode(audio_bytes).decode()
+        audio_html = f"""
+            <audio autoplay>
+                <source src="data:audio/wav;base64,{audio_b64}" type="audio/wav">
+            </audio>
+        """
+        st.markdown(audio_html, unsafe_allow_html=True)
+    except Exception as e:
+        st.error(f"音频播放失败: {str(e)}")
+
+class ResponseThread(threading.Thread):
+    """处理响应的线程类"""
+    def __init__(self, task_func, *args):
+        super().__init__()
+        self.task_func = task_func
+        self.args = args
+        self.result = queue.Queue()
+        self.error = queue.Queue()
+
+    def run(self):
+        try:
+            result = self.task_func(*self.args)
+            self.result.put(result)
+        except Exception as e:
+            self.error.put(e)
+
+    def get_result(self):
+        """获取线程执行结果"""
+        if not self.error.empty():
+            raise self.error.get()
+        return self.result.get()
+
+def process_llm_and_audio_response(prompt, role_chatbot_used, skill_used, checker_used):
+    """处理LLM响应和音频生成"""
+    # 创建占位符用于显示状态
+    status_placeholder = st.empty()
+    
+    def get_llm_response():
+        """获取LLM文本响应"""
+        msg = ""
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
+            for chunk in role_chatbot_used.bedrock_streaming_chat_iter(skill_used, prompt, checker_used):
+                msg += chunk
+                message_placeholder.markdown(msg + "▌")
+            message_placeholder.markdown(msg)
+        return msg
+    
+    def get_audio_response(text):
+        """获取音频响应"""
+        runtime_sm_client = boto3.client(
+            "sagemaker-runtime", 
+            region_name=SAGEMAKER_CONFIG['ENDPOINT']['REGION']
+        )
+        
+        request = {
+            "refer_wav_path": SAGEMAKER_CONFIG['AUDIO']['REFERENCE_WAV'],
+            "prompt_text": text[:50],
+            "prompt_language": SAGEMAKER_CONFIG['TEXT']['DEFAULT_LANGUAGE'],
+            "text": text,
+            "text_language": SAGEMAKER_CONFIG['TEXT']['DEFAULT_LANGUAGE'],
+            "output_s3uri": "",
+            "cut_punc": SAGEMAKER_CONFIG['TEXT']['CUT_PUNCTUATION']
+        }
+        
+        response = runtime_sm_client.invoke_endpoint_with_response_stream(
+            EndpointName=SAGEMAKER_CONFIG['ENDPOINT']['NAME'],
+            ContentType='application/json',
+            Body=json.dumps(request)
+        )
+        
+        audio_chunks = []
+        for chunk in response['Body']:
+            if 'PayloadPart' in chunk:
+                audio_chunks.append(chunk['PayloadPart']['Bytes'])
+        
+        return b''.join(audio_chunks)
+
+    # 1. 启动文本生成线程
+    text_thread = ResponseThread(get_llm_response)
+    text_thread.start()
+
+    # 2. 等待文本生成完成
+    text_thread.join()
+    msg = text_thread.get_result()
+
+    # 3. 启动音频生成线程并显示状态
+    status_placeholder.text("正在生成语音...")
+    audio_thread = ResponseThread(get_audio_response, msg)
+    audio_thread.start()
+
+    # 4. 等待音频生成完成
+    audio_thread.join()
+    audio_bytes = audio_thread.get_result()
+    status_placeholder.empty()
+
+    return msg, audio_bytes
+
 if mode_choicer == "Role Assistant":
     if clear_button:
         st.session_state['user'] = []
@@ -144,11 +250,23 @@ if mode_choicer == "Role Assistant":
 
     if prompt := st.chat_input():
         st.session_state.messages.append({"role": "user", "content": prompt})
-        st.chat_message("user").write(prompt)  
-        msg = role_chatbot_used.bedrock_streaming_chat(skill_used, st.session_state.messages, checker_used)
-        with st.chat_message("assistant"):
-            st.write(msg)
-        st.session_state.messages.append({"role": "assistant", "content": msg})
+        st.chat_message("user").write(prompt)
+        
+        try:
+            # 获取文本和音频响应
+            msg, audio_bytes = process_llm_and_audio_response(
+                st.session_state.messages,
+                role_chatbot_used,
+                skill_used,
+                checker_used
+            )
+            
+            # 播放音频响应
+            play_audio(audio_bytes)
+            
+            st.session_state.messages.append({"role": "assistant", "content": msg})
+        except Exception as e:
+            st.error(f"处理失败: {str(e)}")
 
 if mode_choicer == "Dialogue Check Assistant":
     if clear_button:
